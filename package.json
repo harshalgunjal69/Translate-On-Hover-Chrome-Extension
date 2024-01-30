@@ -20,8 +20,5 @@
   "bugs": {
     "url": "https://github.com/harshalgunjal69/Translate-On-Hover-Chrome-Extension/issues"
   },
-  "homepage": "https://github.com/harshalgunjal69/Translate-On-Hover-Chrome-Extension#readme",
-  "dependencies": {
-    "python-shell": "^5.0.0"
-  }
+  "homepage": "https://github.com/harshalgunjal69/Translate-On-Hover-Chrome-Extension#readme"
 }
