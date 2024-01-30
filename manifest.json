@@ -2,9 +2,26 @@
     "manifest_version": 3,
     "name": "Translate on Hover",
     "version": "1.0",
-    "description": "This is a Chrome Extension that translates the selected text into your preffered language on hover.",
+    "description": "This is a Chrome Extension that translates the selected text into your preferred language on hover.",
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "all_frames": true,
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ],
     "permissions": [
-        "storage"
+        "storage",
+        "activeTab",
+        "scripting",
+        "tabs"
     ],
     "action": {
         "default_popup": "popup.html",

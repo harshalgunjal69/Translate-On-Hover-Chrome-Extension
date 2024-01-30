@@ -2,7 +2,7 @@
   "name": "translate-on-hover-chrome-extension",
   "version": "1.0.0",
   "description": "This is a Chrome Extension that translates the selected text into your preffered language on hover.",
-  "main": "main.js",
+  "main": "popup.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
