@@ -1,3 +1,7 @@
+import { PythonShell } from "python-shell";
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     var toggleSwitch = document.getElementById("toggleSwitch");
 

@@ -1,0 +1,27 @@
+{
+  "name": "translate-on-hover-chrome-extension",
+  "version": "1.0.0",
+  "description": "This is a Chrome Extension that translates the selected text into your preffered language on hover.",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harshalgunjal69/Translate-On-Hover-Chrome-Extension.git"
+  },
+  "keywords": [
+    "TranslateOnHover",
+    "ChromeExtension"
+  ],
+  "author": "Harshal Gunjal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/harshalgunjal69/Translate-On-Hover-Chrome-Extension/issues"
+  },
+  "homepage": "https://github.com/harshalgunjal69/Translate-On-Hover-Chrome-Extension#readme",
+  "dependencies": {
+    "python-shell": "^5.0.0"
+  }
+}
