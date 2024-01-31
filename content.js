@@ -1,29 +1,33 @@
 let isToggleOn = false;
+let isTranslationInProgress = false;
+let translationTimeout;
 
-async function translateText(selectedText) {
-    try {
-        const response = await fetch("http://127.0.0.1:5000/translate", {
-            method: "POST",
-            body: JSON.stringify({
-                q: `${selectedText}`,
-                source: "auto",
-                target: "en",
-                format: "text",
-                api_key: "",
-            }),
-            headers: { "Content-Type": "application/json" },
+function translateText(selectedText, callback) {
+    fetch("http://127.0.0.1:5000/translate", {
+        method: "POST",
+        body: JSON.stringify({
+            q: selectedText,
+            source: "auto",
+            target: "en",
+            format: "text",
+            api_key: "",
+        }),
+        headers: { "Content-Type": "application/json" },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                console.error("Fetch failed with status:", response.status);
+                throw new Error("Translation failed");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log("Translating: ", data.translatedText);
+            callback(data.translatedText);
+        })
+        .catch((error) => {
+            console.error("Error during translation:", error);
         });
-
-        if (!response.ok) {
-            console.error("Fetch failed with status:", response.status);
-            return;
-        }
-
-        const data = await response.json();
-        console.log("Translating: ", data.translatedText);
-    } catch (error) {
-        console.error("Error during translation:", error);
-    }
 }
 
 function getSelectedText() {
@@ -36,16 +40,50 @@ function getSelectedText() {
     return text;
 }
 
-function translateOnHover(text) {
-    translateText(text);
+function replaceSelectedTextWithNode(translatedText) {
+    var selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+        var range = selection.getRangeAt(0);
+
+        // Check if the translated text is already present
+        if (range.toString() !== translatedText) {
+            range.deleteContents();
+
+            // Create a new text node with the translated text
+            var newText = document.createTextNode(translatedText);
+            range.insertNode(newText);
+
+            // Move the selection to the end of the newly inserted text node
+            range.setEndAfter(newText);
+            range.setStartAfter(newText);
+
+            // Collapse the range and clear the selection
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    }
 }
 
-function handleSelectionChange() {
+function translateOnHover() {
     var selectedText = getSelectedText();
     if (selectedText && isToggleOn) {
         console.log("Selected text:", selectedText);
-        translateOnHover(selectedText);
+        if (!isTranslationInProgress) {
+            isTranslationInProgress = true;
+
+            translateText(selectedText, function (translatedText) {
+                replaceSelectedTextWithNode(translatedText);
+                isTranslationInProgress = false;
+            });
+        }
     }
+}
+
+function handleSelectionChange() {
+    clearTimeout(translationTimeout);
+
+    // Delay the translation to prevent flickering and allow selection to stabilize
+    translationTimeout = setTimeout(translateOnHover, 4000);
 }
 
 document.addEventListener("selectionchange", handleSelectionChange);
@@ -54,10 +92,8 @@ chrome.storage.sync.get("extensionState", function (data) {
     isToggleOn = data.extensionState || false;
 });
 
-chrome.storage.onChanged.addListener(function (changes, namespace) {
-    for (let key in changes) {
-        if (key === "extensionState") {
-            isToggleOn = changes[key].newValue || false;
-        }
+chrome.storage.onChanged.addListener(function (changes) {
+    if (changes.extensionState) {
+        isToggleOn = changes.extensionState.newValue || false;
     }
 });
