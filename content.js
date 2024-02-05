@@ -3,7 +3,7 @@ let isTranslationInProgress = false;
 let translationTimeout;
 
 function translateText(selectedText, callback) {
-    fetch("http://127.0.0.1:5000/translate", {
+    fetch("https://translate.terraprint.co/translate", {
         method: "POST",
         body: JSON.stringify({
             q: selectedText,
@@ -83,7 +83,7 @@ function handleSelectionChange() {
     clearTimeout(translationTimeout);
 
     // Delay the translation to prevent flickering and allow selection to stabilize
-    translationTimeout = setTimeout(translateOnHover, 4000);
+    translationTimeout = setTimeout(translateOnHover, 3000);
 }
 
 document.addEventListener("selectionchange", handleSelectionChange);
